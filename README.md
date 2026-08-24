@@ -218,6 +218,11 @@ Prompt:
 ```
 oder in OpenChambers Skills Catalog nach `skill-creator` suchen.
 
+2. Prompten mit Skill "skill-creator":
+```
+/skill-creator Erstelle mir aus dem Arbeitsablauf dieser Session einen neuen Skill.
+```
+
 
 
 ---

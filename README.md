@@ -11,7 +11,7 @@ Gregor Wolf
 Dieses Repo enthält alle Materialien des Workshops:
 - **slides/** &mdash; Präsentation als PDF und HTML-File
 - **live-demo/** &mdash; Zwei kleine Python-Skripte die Token-By-Token zeigen wie ein LLM zum Agenten wird
-- **opencode.json.example** &mdash; Beispielkonfiguration für OpenCode mit Ollama und Atlassian MCP
+- **opencode.json** &mdash; Beispielkonfiguration für OpenCode mit Ollama und Atlassian MCP
 
 ---
 
@@ -55,7 +55,7 @@ curl -fsSL https://opencode.ai/install | bash
 - Mit `/models` ein kostenloses Modell von OpenCode Zen wählen zB.: `Nemotron 3 Ultra Free`
 - Mit `/connect` andere Provider anbinden (funktioniert nicht für lokale Ollama-Modelle)
 - mit `Tab-Taste` in den Plan-Modus wechseln
-- In `~/.config/opencode/` die `opencode.json.example` aus diesem Repo einfügen, `.example` aus dem Dateinamen entfernen und die Berechtigungen überprüfen
+- In `~/.config/opencode/` die `opencode.json` aus diesem Repo einfügen und die Berechtigungen überprüfen
 - Erster Prompt: z.B. `Gebe mir einen Überblick über den aktuellen Ordner`
 
 ### OpenChamber
@@ -142,7 +142,7 @@ Mehr Modelle auf [Ollama Library](https://ollama.com/library/)
 
 ### An OpenCode anbinden
 1. Finder öffnen, `shift`+`command`+`G` drücken, `~/.config/opencode/` eingeben und `Enter`
-2. `opencode.json.example` aus dem Repository runterladen, dort einfügen und `.example` aus dem Dateinamen entfernen
+2. `opencode.json` aus dem Repository runterladen und dort einfügen
 3. Datei im Editor öffnen und überprüfen ob die heruntergeladenen Modelle in der Liste sind
 4. In OpenCode/OpenChamber/OpenWork Modell aus Liste auswählen
 
@@ -159,7 +159,7 @@ Richte den Atlassian MCP für OpenCode ein. Folge den Setup-Schritten in https:/
 
 **oder manuell:**
 1. Finder öffnen, `shift`+`command`+`G` drücken, `~/.config/opencode/` eingeben und `Enter`
-2. `opencode.json.example` aus dem Repository runterladen, dort einfügen und `.example` aus dem Dateinamen entfernen
+2. `opencode.json` aus dem Repository runterladen und dort einfügen
 3. (Datei im Editor öffnen und API Key eingeben)
 4. Überprüfen ob der MCP verfügbar ist:
   - OpenCode: `/mcps` eingeben

@@ -1,0 +1,135 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "ollama": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Ollama (local)",
+      "options": {
+        "baseURL": "http://localhost:11434/v1"
+      },
+      "models": {
+        "gemma4:e4b": {
+          "name": "Gemma 4 e4b"
+        },
+        "gemma4:e2b": {
+          "name": "Gemma 4 e2b"
+        }
+      }
+    }
+  },
+  "permission": {
+    "agent": {
+      "build": {
+        "permission": {
+          "*": "ask",
+          "external_directory": {
+            "*": "ask",
+            "~/.local/share/opencode/tool-output/*": "allow"
+          },
+          "question": "allow",
+          "plan_enter": "allow",
+          "plan_exit": "allow",
+          "read": {
+            "*": "allow",
+            "*.env": "deny",
+            "*.env.*": "deny",
+            "*.env.example": "ask"
+          },
+          "codesearch": "allow",
+          "glob": "allow",
+          "grep": "allow",
+          "list": "allow",
+          "lsp": "allow",
+          "todoread": "allow",
+          "bash": "ask",
+          "doom_loop": "ask",
+          "edit": "ask",
+          "openchamber": "allow",
+          "openchamber_web": "allow",
+          "open-websearch_search": "allow",
+          "open-websearch_fetchWebContent": "allow",
+          "open-websearch_fetchGithubReadme": "allow",
+          "open-websearch_fetchCsdnArticle": "allow",
+          "open-websearch_fetchJuejinArticle": "allow",
+          "open-websearch_fetchLinuxDoArticle": "allow",
+          "skill": "ask",
+          "task": "allow",
+          "todowrite": "allow",
+          "webfetch": "allow",
+          "websearch": "allow"
+        }
+      },
+      "plan": {
+        "permission": {
+          "*": "ask",
+          "external_directory": {
+            "*": "ask",
+            "~/.local/share/opencode/tool-output/*": "allow",
+            "~/.local/share/opencode/plans/*": "allow"
+          },
+          "question": "allow",
+          "read": {
+            "*": "allow",
+            "*.env": "deny",
+            "*.env.*": "deny",
+            "*.env.example": "ask"
+          },
+          "edit": {
+            "*": "deny",
+            ".opencode/plans/*.md": "allow",
+            "../../../.local/share/opencode/plans/*.md": "allow"
+          },
+          "codesearch": "allow",
+          "glob": "allow",
+          "grep": "allow",
+          "list": "allow",
+          "lsp": "allow",
+          "bash": "ask",
+          "doom_loop": "ask",
+          "openchamber": "allow",
+          "openchamber_web": "allow",
+          "open-websearch_search": "allow",
+          "open-websearch_fetchWebContent": "allow",
+          "open-websearch_fetchGithubReadme": "allow",
+          "open-websearch_fetchCsdnArticle": "allow",
+          "open-websearch_fetchJuejinArticle": "allow",
+          "open-websearch_fetchLinuxDoArticle": "allow",
+          "plan_enter": "deny",
+          "plan_exit": "deny",
+          "skill": "ask",
+          "task": "allow",
+          "todowrite": "allow",
+          "webfetch": "allow",
+          "websearch": "allow"
+        }
+      }
+    }
+  },
+  "mcp": {
+    "ollama-atlassian": {
+      "type": "remote",
+      "url": "http://<proxy>/mcp",
+      "enabled": true,
+      "oauth": false,
+      "timeout": 120000,
+      "headers": {
+        "X-Jira-Auth": "{env:ATLASSIAN_JIRA_BASIC}",
+        "X-Confluence-Auth": "{env:ATLASSIAN_CONFLUENCE_BASIC}"
+      }
+    },
+    "mcp-atlassian": {
+      "type": "local",
+      "command": [
+        "sh",
+        "-c",
+        "export JIRA_API_TOKEN=\"$(secret-tool lookup service atlassian-mcp user <your-email>)\"; export CONFLUENCE_API_TOKEN=\"$JIRA_API_TOKEN\"; exec uvx mcp-atlassian"
+      ],
+      "environment": {
+        "JIRA_URL": "https://<your-domain>.atlassian.net",
+        "JIRA_USERNAME": "<your-email>",
+        "CONFLUENCE_URL": "https://<your-domain>.atlassian.net/wiki",
+        "CONFLUENCE_USERNAME": "<your-email>"
+      }
+    }
+  }
+}

@@ -1,0 +1,7 @@
+# Office temp files
+~$*.pptx
+
+__pycache__/
+.ruff_cache/
+.openchamber/
+.DS_Store

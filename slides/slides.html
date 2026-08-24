@@ -1,0 +1,1043 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agentic Coding — Mogic Workshop</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/reveal.css">
+  <style>
+    @font-face {
+      font-family: "Ygro Sans Beta";
+      src: url("fonts/YgroSansBeta-Book.otf") format("opentype");
+      font-weight: 400;
+      font-style: normal;
+    }
+
+    :root {
+      --paper: #f0f1f3;
+      --card: #fbfcfd;
+      --ink: #2c3e50;
+      --muted: #7b8a99;
+      --line: #e2e6ea;
+      --yellow: #ffe8a1;
+      --yellow-soft: rgba(255, 230, 106, .5);
+      --pink: #f6cdd1;
+      --pink-deep: #c2606b;
+      --blue: #b3d7ff;
+      --blue-deep: #2f6fb3;
+      --lav: #e3e2f4;
+      --lav-deep: #7567b1;
+      --green-deep: #4f8a63;
+      --peach: #f7e8dc;
+    }
+
+    * { box-sizing: border-box; }
+    body { background: var(--paper); }
+    .reveal {
+      font-family: "Ygro Sans Beta", "Avenir Next", "Helvetica Neue", Arial, sans-serif;
+      color: var(--ink);
+      font-size: 30px;
+      font-weight: 400;
+    }
+    .reveal .slides { text-align: left; }
+    .reveal .slides section { padding: 40px 56px; }
+    .reveal .slides > section { height: 700px; }
+    .reveal h1, .reveal h2, .reveal h3 {
+      font-family: "Ygro Sans Beta", "Avenir Next", "Helvetica Neue", Arial, sans-serif;
+      color: var(--ink);
+      text-transform: none;
+      letter-spacing: 0;
+      margin: 0;
+      font-weight: 400;
+    }
+    .reveal h1 { font-size: 3.1em; line-height: 1.02; }
+    .reveal h2 { font-size: 2.1em; line-height: 1.05; }
+    .reveal h3 { font-size: 1.05em; line-height: 1.2; }
+    .reveal p { line-height: 1.5; }
+    .reveal code, .mono { font-family: SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
+    .reveal pre {
+      width: 100%; margin: 14px 0 0; box-shadow: none;
+      background: var(--card); border: 1px solid var(--line); border-radius: 6px;
+    }
+    .reveal pre code {
+      display: block; padding: 16px 20px; max-height: 430px; overflow: auto;
+      font-size: .58em; line-height: 1.5; color: var(--ink); background: transparent;
+    }
+    .reveal .progress { color: var(--ink); height: 3px; }
+    .reveal .slide-number { background: transparent; color: var(--muted); font-family: SFMono-Regular, Menlo, monospace; font-size: 14px; }
+    .reveal .controls { color: var(--ink); }
+
+    .eyebrow {
+      color: var(--muted); font-size: .46em; letter-spacing: .14em;
+      text-transform: uppercase; margin-bottom: 14px;
+    }
+    .subhead { color: var(--muted); font-size: .72em; max-width: 800px; margin-top: 18px; }
+    .muted { color: var(--muted); }
+    .tiny { font-size: .54em; color: var(--muted); margin-top: 20px; }
+    .mark { background: var(--yellow-soft); padding: 0 .18em; }
+    .mark-pink { background: rgba(246, 205, 209, .55); padding: 0 .18em; }
+    .mark-blue { background: rgba(179, 215, 255, .5); padding: 0 .18em; }
+
+    .circle { position: absolute; border-radius: 50%; pointer-events: none; z-index: 0; }
+    .circle-pink { background: rgba(246, 205, 209, .38); }
+    .circle-lav { background: rgba(227, 226, 244, .5); }
+    .circle-peach { background: rgba(247, 232, 220, .55); }
+    .circle-blue { background: rgba(179, 215, 255, .28); }
+
+    .deck-grid {
+      position: absolute; inset: 0; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(44, 62, 80, .07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(44, 62, 80, .07) 1px, transparent 1px);
+      background-size: 52px 52px;
+      mask-image: linear-gradient(to bottom, transparent 0, black 18%, black 82%, transparent 100%);
+      z-index: 1;
+    }
+
+    .title-slide > :not(.circle):not(.deck-grid) { position: relative; z-index: 2; transform: translateY(85px); }
+    .title-slide .eyebrow { font-size: .62em; }
+    .title-slide .subhead { font-size: .92em; max-width: 900px; }
+    .title-slide .presenter { margin-top: 34px; font-size: .68em; color: var(--ink); }
+
+    .title-meta { display: flex; gap: 14px; margin-top: 34px; }
+    .title-meta span {
+      font-size: .5em; color: var(--ink); background: var(--card);
+      border: 1px solid var(--line); border-radius: 4px; padding: 8px 14px;
+    }
+
+    .timeline { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 56px; }
+    .time-block { background: var(--card); border: 1px solid var(--line); border-top: 3px solid var(--blue); padding: 20px 20px 22px; min-height: 160px; }
+    .time-block:nth-child(2) { border-top-color: var(--yellow); }
+    .time-block:nth-child(3) { border-top-color: var(--pink); }
+    .time-block:nth-child(4) { border-top-color: var(--lav); }
+    .time { font-size: 1.25em; color: var(--muted); margin-top: 16px; }
+    .time-block h3 { margin: 0; font-size: 1.05em; }
+
+    .audience-questions { position: absolute; inset: 106px 56px 60px; display: grid; align-content: start; gap: 22px; }
+    .audience-question { padding: 6px 0; font-size: .84em; font-style: italic; }
+
+    .pipeline { display: grid; grid-template-columns: 1fr 40px 1fr 40px 1fr; align-items: stretch; margin-top: 56px; }
+    .pipe-card { background: var(--card); border: 1px solid var(--line); border-radius: 6px; padding: 22px; min-height: 210px; }
+    .pipe-card .num { color: var(--muted); font-size: .55em; letter-spacing: .12em; }
+    .pipe-card h3 { margin: 10px 0 10px; }
+    .pipe-card p { font-size: .56em; color: var(--muted); margin: 0; }
+    .pipe-arrow { color: var(--muted); display: grid; place-items: center; font-size: 1.3em; }
+
+    .token-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 26px; }
+    .token {
+      padding: 8px 10px; background: var(--card); border: 1px solid var(--line);
+      border-bottom: 3px solid var(--blue); color: var(--ink);
+      font-family: SFMono-Regular, Menlo, monospace; font-size: .5em;
+    }
+    .token-example .token { padding: 11px 13px; font-size: .62em; }
+    .context-facts .key-statement { grid-template-columns: 38px 1fr; font-size: .8em; line-height: 1.4; }
+
+    .machine {
+      display: grid; grid-template-columns: 1.3fr 56px 180px 56px 1.15fr;
+      align-items: center; gap: 4px; margin-top: 34px; min-height: 380px;
+    }
+    .basic-machine { grid-template-columns: 1fr 56px 180px 56px 1fr; }
+    .basic-machine .dist-row { grid-template-columns: 108px 1fr 58px; font-size: .56em; }
+    .input-box, .output-box {
+      background: var(--card); border: 1px solid var(--line); border-radius: 6px;
+      padding: 18px; min-height: 230px;
+    }
+    .box-label { font-size: .48em; color: var(--muted); text-transform: uppercase; letter-spacing: .12em; margin-bottom: 14px; }
+    .flow-arrow { color: var(--ink); text-align: center; font-size: 1.3em; }
+    .llm-orb {
+      width: 164px; height: 164px; border-radius: 50%; display: grid; place-items: center;
+      background: #fff; border: 3px solid var(--ink); color: var(--ink); font-size: 1.05em;
+      box-shadow: 0 0 0 12px rgba(179, 215, 255, .25);
+    }
+    .network-core {
+      width: 180px; min-height: 300px; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; text-align: center;
+    }
+    .network-core h3 { font-size: .8em; margin-bottom: 16px; }
+    .network-core img { width: 96px; height: 96px; object-fit: contain; }
+    .network-core em { margin-top: 14px; color: var(--muted); font-size: .56em; }
+    .context-text { font-family: SFMono-Regular, Menlo, monospace; font-size: .58em; line-height: 1.6; }
+    .prompt-line {
+      padding: 9px 12px; margin-bottom: 8px; background: #f6f7f9;
+      border-left: 3px solid var(--line);
+      font-family: SFMono-Regular, Menlo, monospace; font-size: .56em; line-height: 1.45;
+    }
+    .prompt-line.system { border-left-color: var(--pink); }
+    .prompt-line.user { border-left-color: var(--blue); }
+    .prompt-line.assistant { border-left-color: var(--yellow); }
+    .dist-row { display: grid; grid-template-columns: 96px 1fr 56px; gap: 8px; align-items: center; margin: 11px 0; font-family: SFMono-Regular, Menlo, monospace; font-size: .56em; }
+    .bar { height: 10px; background: #e9ecef; }
+    .bar > span { display: block; height: 100%; background: var(--blue); }
+    .thought { font-family: SFMono-Regular, Menlo, monospace; font-size: .56em; line-height: 1.5; color: var(--muted); }
+    .output-box.tool-call { border: 3px solid var(--lav-deep); }
+
+    .training-pipeline { margin-top: 34px; }
+    .training-pipeline .pipe-card { min-height: 175px; }
+    .training-pipeline .pipe-card h3 { margin-top: 0; }
+    .key-statements { display: grid; gap: 10px; margin-top: 40px; }
+    .key-statement { display: grid; grid-template-columns: 32px 1fr; gap: 10px; font-size: .69em; line-height: 1.25; padding: 7px 0; }
+    .key-statement:before { content: "💡"; font-style: normal; }
+    .key-statements.token-facts { margin-top: 46px; }
+    .key-statements.context-facts { gap: 26px; }
+    .key-statement .sub { display: block; margin-top: 10px; color: var(--muted); font-size: .88em; }
+
+    .ctx-layout { display: grid; grid-template-columns: 290px 1fr; gap: 56px; align-items: start; }
+    .ctx-layout .key-statements { margin-top: 0; }
+    .ctx-cap { font-size: .46em; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+    .ctx-frame {
+      height: 372px; padding: 7px; display: flex; flex-direction: column; gap: 7px;
+      background: var(--card); border: 3px solid var(--ink); border-radius: 8px;
+    }
+    .ctx-seg { display: grid; place-items: center; border-left: 4px solid var(--line); border-radius: 4px; padding: 6px; font-size: .5em; line-height: 1.2; }
+    .ctx-seg.sys { background: #f6f7f9; border-left-color: var(--pink); }
+    .ctx-seg.md { background: rgba(246, 205, 209, .38); border-left-color: var(--pink); }
+    .ctx-seg.skills { background: rgba(255, 232, 161, .55); border-left-color: var(--yellow); }
+    .ctx-seg.tools { background: #f6f7f9; border-left-color: var(--lav); }
+    .ctx-seg.chat { background: rgba(179, 215, 255, .3); border-left-color: var(--blue); }
+    .ctx-seg.free {
+      color: var(--muted); border-left-color: transparent;
+      background: repeating-linear-gradient(45deg, #fff, #fff 7px, #f1f3f5 7px, #f1f3f5 14px);
+    }
+
+    .chat-machine { margin-top: 24px; }
+    .chat-machine .input-box, .chat-machine .output-box { min-height: 280px; }
+    .prompt-line.assistant > .fragment { display: none; }
+    .prompt-line.assistant > .fragment.visible { display: inline; }
+    .prompt-line.assistant > .fragment.current-visible.visible:not(.current-fragment) { display: none; }
+    .generated-token { background: var(--yellow-soft); padding: 1px 4px; border-radius: 2px; }
+    .prediction-highlight { background: var(--yellow-soft); padding: 1px 3px; border-radius: 2px; }
+    .prediction-stack { position: relative; min-height: 250px; }
+    .prediction-state { position: absolute; inset: 0; width: 100%; }
+
+    .insight { display: flex; gap: 12px; align-items: center; justify-content: center; text-align: center; font-size: .68em; line-height: 1.35; margin: 14px 0 0; }
+    .insight:before { content: "💡"; }
+    .fixed-sequence-slide > .insight { position: absolute; left: 56px; top: 620px; width: 988px; margin: 0; }
+    .agent-diagram { margin-top: 12px; min-height: 280px; }
+    .agent-diagram .input-box, .agent-diagram .output-box { min-height: 225px; }
+    .agent-system-block { padding: 10px 12px; margin-bottom: 8px; background: #f6f7f9; border-left: 4px solid var(--pink); font-family: SFMono-Regular, Menlo, monospace; font-size: .54em; line-height: 1.45; }
+    .agent-tools { padding: 9px 12px; background: #f6f7f9; border-left: 4px solid var(--lav); font-family: SFMono-Regular, Menlo, monospace; font-size: .54em; line-height: 1.5; }
+    .agent-user { margin-top: 8px; }
+    .agent-loop { width: 74%; height: 62px; margin: -8px auto 0; margin-top: 10px !important; border: 3px solid var(--lav-deep); border-top: 0; border-radius: 0 0 18px 18px; position: relative; color: var(--lav-deep); }
+    .agent-loop:before { content: ""; position: absolute; left: -9.1px; top: 1px; width: 13px; height: 13px; border-top: 3px solid var(--lav-deep); border-left: 3px solid var(--lav-deep); transform: rotate(45deg); }
+    .agent-loop span { position: absolute; left: 50%; bottom: 8px; transform: translateX(-50%); width: 90%; text-align: center; font-size: .56em; }
+
+    .harness-frame { border: 4px solid var(--ink); border-radius: 8px; padding: 20px 24px 16px; margin-top: 20px; }
+    .harness-frame h2 { font-size: 1.45em; margin-bottom: 14px; }
+    .harness-frame .agent-diagram { margin-top: 10px; min-height: 245px; }
+    .harness-frame .agent-diagram .input-box, .harness-frame .agent-diagram .output-box { min-height: 205px; }
+    .harness-frame .agent-loop { height: 52px; margin-top: 2px; }
+    .harness-insight { margin-top: 20px; }
+    .prompt-module { padding: 9px 12px; margin-top: 8px; font-family: SFMono-Regular, Menlo, monospace; font-size: .54em; line-height: 1.45; }
+    .skills-block { background: rgba(255, 232, 161, .55); border-left: 4px solid var(--yellow); }
+    .mcp-block { background: rgba(179, 215, 255, .3); border-left: 4px solid var(--blue); }
+
+    .context-engineering-machine { grid-template-columns: 1.75fr 45px 160px 45px .7fr; margin-top: 22px; min-height: 420px; }
+    .context-engineering-machine .llm-orb { width: 150px; height: 150px; }
+    .context-outer { min-height: 405px; padding: 14px; background: var(--card); border: 1px solid var(--line); border-radius: 6px; }
+    .system-prompt-box { padding: 11px; border: 3px solid var(--yellow); border-radius: 6px; background: #fff; }
+    .system-prompt-box .agent-system-block { margin-bottom: 7px; }
+    .module-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .module-grid > .wide { grid-column: 1 / -1; }
+    .agents-md-block { background: rgba(246, 205, 209, .38); border-left: 4px solid var(--pink); }
+    .user-prompt-box { margin-top: 9px; padding: 10px 12px; background: #f6f7f9; border-left: 4px solid var(--blue); font-family: SFMono-Regular, Menlo, monospace; font-size: .54em; line-height: 1.45; }
+    .llm-output-box { min-height: 105px; display: grid; place-items: center; text-align: center; background: var(--card); border: 1px solid var(--line); border-radius: 6px; font-size: .62em; }
+
+    /* Shared coordinate system for the LLM/agent diagram sequence. */
+    .fixed-sequence-slide { position: relative; min-height: 620px !important; }
+    .fixed-sequence-slide .fixed-diagram {
+      display: block; position: absolute; top: 194px; left: 56px; right: 56px;
+      width: auto; height: 352px; min-height: 0; margin: 0;
+    }
+    .fixed-sequence-slide .fixed-diagram > :nth-child(1) { position: absolute; left: 0; top: 0; width: 357px; margin: 0; }
+    .fixed-sequence-slide .fixed-diagram > :nth-child(2) { position: absolute; left: 363px; top: 156px; width: 50px; margin: 0; }
+    .fixed-sequence-slide .fixed-diagram > :nth-child(3) { position: absolute; left: 419px; top: 0; width: 150px; margin: 0; }
+    .fixed-sequence-slide .fixed-diagram > :nth-child(4) { position: absolute; left: 575px; top: 156px; width: 50px; margin: 0; }
+    .fixed-sequence-slide .fixed-diagram > :nth-child(5) { position: absolute; left: 631px; top: 0; width: 357px; margin: 0; }
+    .fixed-sequence-slide .fixed-diagram > :nth-child(1):before,
+    .fixed-sequence-slide .fixed-diagram > :nth-child(5):before {
+      position: absolute; top: -30px; left: 0; color: var(--muted);
+      font-family: "Ygro Sans Beta", "Avenir Next", sans-serif; font-size: 14.4px;
+      line-height: 1; letter-spacing: .12em; text-transform: uppercase;
+    }
+    .fixed-sequence-slide .fixed-diagram > :nth-child(1):before { content: "INPUT"; }
+    .fixed-sequence-slide .fixed-diagram > :nth-child(5):before { content: "OUTPUT"; }
+    .fixed-sequence-slide.structured-slide .fixed-diagram > :nth-child(5):before { content: "STRUCTURED OUTPUT"; }
+    .fixed-sequence-slide .fixed-diagram .llm-orb { top: 101px; width: 150px; height: 150px; }
+    .fixed-sequence-slide .fixed-diagram .network-core { width: 150px; min-height: 352px; }
+    .fixed-sequence-slide .fixed-diagram .input-box,
+    .fixed-sequence-slide .fixed-diagram .output-box { min-height: 348px; }
+    .fixed-sequence-slide .agent-loop { position: absolute; left: 180px; top: 556px; width: 740px; height: 54px; margin: 0; }
+    .tool-result { border-left-color: var(--lav-deep); background: rgba(227, 226, 244, .52); }
+    .agent-output-stage { position: relative; min-height: 220px; }
+    .agent-output-state { position: absolute; inset: 0; }
+
+    .harness-slide .harness-frame { display: contents; border: 0; }
+    .frame-outline {
+      position: absolute; left: 36px; right: 36px; top: 70px; height: 566px;
+      border: 4px solid var(--ink); border-radius: 8px; pointer-events: none;
+    }
+    .harness-slide .harness-frame > h2 { margin-top: 0; margin-bottom: 0; font-size: 2.1em; }
+    .harness-slide .harness-insight { top: 648px; }
+
+    .fixed-sequence-slide .context-engineering-machine { height: 466px; }
+    .fixed-sequence-slide .context-engineering-machine > :nth-child(1) { width: 540px; }
+    .fixed-sequence-slide .context-engineering-machine > :nth-child(2) { left: 548px; top: 213px; }
+    .fixed-sequence-slide .context-engineering-machine > .llm-orb { left: 612px; top: 158px; width: 150px; height: 150px; }
+    .fixed-sequence-slide .context-engineering-machine > :nth-child(4) { left: 770px; top: 213px; }
+    .fixed-sequence-slide .context-engineering-machine > :nth-child(5) { left: 834px; top: 158px; width: 154px; }
+    .fixed-sequence-slide .context-engineering-machine .context-outer { min-height: 466px; padding: 12px; }
+    .fixed-sequence-slide .context-engineering-machine .llm-output-box { min-height: 150px; }
+    .fixed-sequence-slide .context-engineering-machine .box-label { margin-bottom: 8px; }
+    .fixed-sequence-slide .context-engineering-machine .system-prompt-box { padding: 9px; }
+    .fixed-sequence-slide .context-engineering-machine .prompt-module,
+    .fixed-sequence-slide .context-engineering-machine .agent-tools,
+    .fixed-sequence-slide .context-engineering-machine .agent-system-block,
+    .fixed-sequence-slide .context-engineering-machine .user-prompt-box { font-size: .52em; line-height: 1.35; padding: 8px 10px; margin-top: 0; }
+    .fixed-sequence-slide .context-engineering-machine .agent-system-block { margin-bottom: 8px; }
+    .fixed-sequence-slide .context-engineering-machine .user-prompt-box { margin-top: 8px; }
+    .fixed-sequence-slide.structured-slide .context-engineering-machine > :nth-child(1):before,
+    .fixed-sequence-slide.structured-slide .context-engineering-machine > :nth-child(5):before { content: none; }
+    .context-engineering-machine .context-outer { position: relative; }
+    .context-engineering-machine .context-outer:has(.context-trigger.current-fragment):after {
+      content: ""; position: absolute; inset: 0; z-index: 2;
+      background: rgba(29, 36, 43, .72); border-radius: 6px;
+    }
+    .context-trigger { position: absolute; width: 0; height: 0; overflow: hidden; }
+    .agents-md-block:has(.context-trigger.current-fragment),
+    .skills-block:has(.context-trigger.current-fragment),
+    .mcp-block:has(.context-trigger.current-fragment) { position: relative; z-index: 3; }
+    .context-detail {
+      position: absolute; left: 590px; top: 84px; z-index: 4; width: 370px;
+      font-size: 1.15em; line-height: 1.45;
+    }
+    .context-detail ul { margin: 0; padding-left: 24px; font-size: .68em; }
+    .context-detail li { margin: 14px 0; }
+    .context-detail .insight { margin-top: 34px; font-size: .62em; }
+
+    .split { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; margin-top: 40px; }
+    .panel { background: var(--card); border: 1px solid var(--line); border-radius: 6px; padding: 24px; min-height: 240px; }
+    .panel h3 { margin-bottom: 12px; }
+    .panel p, .panel li { font-size: .56em; line-height: 1.5; color: var(--ink); }
+    .panel p.muted, .panel li.muted { color: var(--muted); }
+    .panel.desktop { border-top: 3px solid var(--blue); }
+    .panel.terminal { border-top: 3px solid var(--pink); }
+    .path-label { font-size: .48em; text-transform: uppercase; letter-spacing: .12em; color: var(--muted); margin-bottom: 12px; display: flex; align-items: center; min-height: 30px; }
+    .step-num {
+      width: 30px; height: 30px; display: inline-grid; place-items: center; border-radius: 50%;
+      border: 2px solid var(--ink); color: var(--ink); font-size: .56em; margin-right: 10px;
+      font-family: SFMono-Regular, Menlo, monospace;
+    }
+    .cmd {
+      display: block; padding: 12px 14px; margin: 10px 0; background: #fff;
+      border: 1px solid var(--line); border-left: 3px solid var(--blue);
+      color: var(--ink); font-family: SFMono-Regular, Menlo, monospace; font-size: .56em; line-height: 1.5;
+      overflow-wrap: anywhere;
+    }
+    .cmd a, .reveal pre code a { color: inherit; text-decoration: underline; text-decoration-color: rgba(47, 111, 179, .45); }
+
+    .section-number { position: absolute; right: 56px; bottom: 26px; font-size: 5.5em; color: rgba(44, 62, 80, .08); line-height: 1; }
+
+    /* Content on every slide starts at the same height below the headline. */
+    .reveal .slides > section > :is(h1, h2) + *:not(.fixed-diagram) { margin-top: 34px !important; }
+
+    .reveal .slides section.center-slide { width: 1100px; height: 700px; min-height: 700px; padding: 40px 56px; text-align: center !important; }
+    .center-slide > .center-content { position: absolute; inset: 0; display: grid; place-content: center; padding: 0 90px; }
+    .center-slide h2 { font-size: 2.5em; max-width: 880px; margin: 0 auto; }
+    .center-slide.hero h2 { font-size: 3.4em; }
+    .center-slide .eyebrow { margin-bottom: 18px; text-align: left; }
+    .need-label { font-size: .78em; color: var(--muted); }
+    .need-list { margin: 16px 0 0; padding-left: 26px; }
+    .need-list li { font-size: .82em; line-height: 1.5; margin: 14px 0; }
+
+    .centered-body { position: absolute; inset: 130px 56px 40px; display: grid; align-content: start; }
+    .myth-layout { display: grid; grid-template-columns: 260px 1fr; gap: 56px; align-items: center; }
+    .intelligence-mark { display: flex; align-items: center; justify-content: center; gap: 20px; }
+    .intelligence-mark img { width: 148px; height: 148px; object-fit: contain; }
+    .intelligence-mark span { font-size: 3.2em; line-height: 1; color: var(--pink-deep); }
+    .myth-points ul { margin: 0; padding-left: 22px; }
+    .myth-points ul + ul { margin-top: 24px; padding-top: 22px; border-top: 1px solid var(--line); }
+    .myth-points li { font-size: .68em; line-height: 1.4; margin: 13px 0; }
+    .myth-points .sub { display: block; margin-top: 8px; color: var(--muted); }
+
+    .stack-grid { display: grid; gap: 16px; }
+    .stack-grid .panel { min-height: 0; padding: 22px 26px; }
+    .stack-grid .panel h3 { font-size: .92em; line-height: 1.25; }
+    .req-note { font-size: .56em; color: var(--muted); margin-top: 22px; }
+    .formula {
+      margin-top: 14px; padding: 14px 18px; background: #fff; border: 1px solid var(--line);
+      border-left: 4px solid var(--blue); font-family: SFMono-Regular, Menlo, monospace; font-size: .56em;
+    }
+    .formula-note { display: block; margin-top: 8px; padding-left: 42ch; color: var(--muted); }
+    .two-col { columns: 2; column-gap: 40px; margin: 6px 0 0; padding-left: 20px; }
+    .two-col li { font-size: .56em; line-height: 1.35; margin: 7px 0; break-inside: avoid; }
+
+    .runtime-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+    .runtime-card {
+      display: flex; align-items: flex-start; gap: 20px; padding: 26px 28px; min-height: 130px;
+      background: var(--card); border: 1px solid var(--line); border-radius: 6px;
+      color: var(--ink); text-decoration: none;
+    }
+    .runtime-logo { width: 60px; height: 60px; flex: none; object-fit: contain; border-radius: 12px; }
+    .runtime-card h3 { font-size: 1.15em; }
+    .pm { list-style: none; margin: 14px 0 0; padding: 0; }
+    .pm li { position: relative; padding-left: 26px; font-size: .58em; line-height: 1.45; margin: 9px 0; break-inside: avoid; }
+    .pm li:before { content: "+"; position: absolute; left: 0; top: -1px; color: var(--green-deep); font-size: 1.15em; line-height: 1.3; }
+    .pm li.con:before { content: "−"; color: var(--pink-deep); }
+
+    .screenshot-overlay { position: absolute; z-index: 5; inset: 24px 30px 30px; display: grid; place-items: center; }
+    .screenshot-overlay img {
+      max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 10px;
+      filter: drop-shadow(0 26px 46px rgba(44, 62, 80, .36));
+    }
+    .screenshot-overlay.model-picker { inset: 42px 70px 52px; }
+    .term { width: 820px; max-width: 100%; border-radius: 11px; overflow: hidden; box-shadow: 0 26px 46px rgba(44, 62, 80, .36); }
+    .term-bar { display: flex; gap: 8px; padding: 12px 15px; background: #2f363e; }
+    .term-bar i { width: 12px; height: 12px; border-radius: 50%; }
+    .term-body { padding: 22px 26px 26px; background: #21272e; color: #eceff2; font-family: SFMono-Regular, Menlo, monospace; font-size: .52em; line-height: 1.8; }
+    .term-body b { color: #9fd0ff; font-weight: 400; }
+    .term-body i { color: #ffe08a; font-style: normal; }
+    .term-body em { color: #93a2b3; font-style: normal; }
+
+    .link-group + .link-group { margin-top: 26px; }
+    .link-group h3 { font-size: .66em; color: var(--muted); }
+    .link-group ul { margin: 12px 0 0; padding-left: 22px; }
+    .link-group li { font-size: .58em; line-height: 1.5; margin: 12px 0; }
+    .lnk { color: var(--blue-deep); border-bottom: 1px solid rgba(47, 111, 179, .35); text-decoration: none; overflow-wrap: anywhere; }
+    .link-group .note { color: var(--muted); }
+
+    .cheat-grid { display: grid; grid-template-columns: 1fr; gap: 8px; }
+    .cheat-item {
+      display: grid; grid-template-columns: 180px 1fr; gap: 18px; padding: 10px 18px; background: var(--card); border: 1px solid var(--line);
+      border-left: 3px solid var(--blue); border-radius: 4px;
+      font-family: SFMono-Regular, Menlo, monospace; font-size: .56em; color: var(--ink);
+    }
+    .cheat-item .description { font-family: "Ygro Sans Beta", "Avenir Next", sans-serif; color: var(--muted); }
+    .cheat-link { position: absolute; left: 56px; bottom: 52px; width: 988px; font-size: .5em; line-height: 1.65; }
+    .cheat-link .caption { color: var(--muted); }
+    .cheat-link .lnk { overflow-wrap: anywhere; }
+
+    .harness-row { display: grid; grid-template-columns: 40px 210px 1fr; gap: 20px; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--line); }
+    .harness-row img { width: 36px; height: 36px; object-fit: contain; border-radius: 8px; }
+    .harness-row .name { font-size: .66em; }
+    .harness-row .repo { font-family: SFMono-Regular, Menlo, monospace; font-size: .5em; color: var(--blue-deep); line-height: 1.6; }
+    .harness-list > .harness-row:last-of-type { border-bottom: 0; }
+    .meta-label { margin: 26px 0 0; font-size: .66em; color: var(--muted); }
+    .centered-body .pipeline { margin-top: 0; }
+    .centered-body .pipe-card p { font-size: .62em; }
+    .centered-body .key-statement { font-size: .76em; }
+    .harness-feature { display: grid; grid-template-columns: 82px 1fr; gap: 24px; align-items: start; }
+    .harness-feature + .harness-feature { margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--line); }
+    .harness-feature img { width: 72px; height: 72px; object-fit: contain; border-radius: 14px; }
+    .harness-feature h3 { font-size: .9em; }
+    .harness-feature ul { columns: 2; column-gap: 38px; }
+    .harness-feature p { font-size: .58em; line-height: 1.45; margin: 12px 0 0; }
+    .harness-feature a, .harness-row { color: var(--ink); text-decoration: none; }
+    .transition-title > :not(.circle):not(.deck-grid) { position: relative; z-index: 2; }
+    .transition-title { display: grid !important; place-items: center; text-align: center !important; }
+    .transition-title h1 { font-size: 3.6em; }
+    .repo-link { display: block; margin-top: 24px; color: var(--blue-deep); font-size: .75em; text-decoration: none; }
+    .repo-qr { display: block; width: 300px; height: 300px; margin: 26px auto 0; filter: drop-shadow(0 18px 32px rgba(44, 62, 80, .22)); }
+
+    @media (max-width: 900px) {
+      .reveal { font-size: 25px; }
+      .machine { grid-template-columns: 1.2fr 40px 140px 40px 1fr; }
+      .llm-orb { width: 130px; height: 130px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <section class="title-slide">
+        <div class="circle circle-pink" style="width:760px;height:760px;bottom:-260px;right:-180px;"></div>
+        <div class="circle circle-lav" style="width:620px;height:620px;bottom:-300px;right:120px;"></div>
+        <div class="circle circle-peach" style="width:420px;height:420px;bottom:-140px;right:330px;"></div>
+        <div class="deck-grid"></div>
+        <div class="eyebrow">Workshop</div>
+        <h1>Agentic Coding</h1>
+        <p class="subhead">Grundlagen, Open-Source-Lösungen und lokale Modelle</p>
+        <p class="presenter">Gregor Wolf</p>
+        <aside class="notes">Hallo zusammen. Danke für euer Interesse. Ich bin Gregor und studiere Informatik im Master. Meine Masterarbeit entsteht in Zusammenarbeit mit MOGIC. Ich arbeite am ScaDS.AI im Living Lab und habe dadurch Erfahrung mit Open-Source-Lösungen, lokalen Modellen und Workshops zu KI-Themen. Ich freue mich, mein Wissen und meine Erfahrungen mit euch zu teilen. Bitte Namensschilder machen.</aside>
+      </section>
+
+      <section>
+        <h2>Ablauf</h2>
+        <div class="timeline">
+          <div class="time-block"><h3>Input</h3><div class="time">45 min</div></div>
+          <div class="time-block"><h3>Fragen</h3><div class="time">15 min</div></div>
+          <div class="time-block"><h3>Hands-on</h3><div class="time">90 min</div></div>
+          <div class="time-block"><h3>Diskussion</h3><div class="time">30 min</div></div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Bevor wir loslegen …</h2>
+        <div class="audience-questions">
+          <div class="audience-question fragment">„Wer hat schon einmal mit KI im Browser gechattet?“</div>
+          <div class="audience-question fragment">„Wer hat schon einmal eine Agent-App benutzt, etwa Claude Code, Cowork oder Design?“</div>
+          <div class="audience-question fragment">„Wer hat schon einmal ein LLM lokal ausgeführt?“</div>
+          <div class="audience-question fragment">„Wer weiß, was ein Mixture-of-Experts-Modell ist?“</div>
+        </div>
+        <aside class="notes">Disclaimer: Erstens bin ich kein Full-Time-Entwickler und möchte euch nicht erklären, wie ihr zu arbeiten habt. Das wisst ihr selbst am besten. Zweitens entwickelt sich das Feld extrem schnell; ich kann nicht alles kennen oder mitbekommen. Drittens möchte ich niemanden langweilen, aber auch niemanden abhängen. Meldet euch, stellt Fragen und gebt mir gerne Feedback.</aside>
+      </section>
+
+      <section class="fixed-sequence-slide">
+        <div class="eyebrow">Input</div>
+        <h2>Sprach-KI → LLM</h2>
+        <div class="machine basic-machine fixed-diagram">
+          <div>
+            <div class="input-box">
+              <div class="box-label">Kontext</div>
+              <div class="context-text">Der schönste Stadtteil Leipzigs ist</div>
+            </div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="network-core">
+            <h3>Neuronales Netz</h3>
+            <!-- Carbon Design System: machine-learning-model -->
+            <img src="assets/machine-learning-model.svg" alt="Machine-Learning-Modell">
+            <em class="fragment">„Inferenz …“</em>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div>
+            <div class="output-box">
+              <div class="box-label">Wahrscheinlichkeit für das nächste Token</div>
+              <div class="dist-row"><span class="prediction-highlight">Connewitz</span><div class="bar"><span style="width:68%"></span></div><span>68 %</span></div>
+              <div class="dist-row"><span>Plagwitz</span><div class="bar"><span style="width:12%"></span></div><span>12 %</span></div>
+              <div class="dist-row"><span>Gohlis</span><div class="bar"><span style="width:6%"></span></div><span>6 %</span></div>
+              <div class="dist-row"><span>Reudnitz</span><div class="bar"><span style="width:.3%;min-width:2px;"></span></div><span>0,3 %</span></div>
+              <div class="dist-row"><span>…</span><div></div><span></span></div>
+            </div>
+          </div>
+        </div>
+        <div class="insight fragment">LLMs sind riesige neuronale Netze mit vielen Millionen bis Trillionen Parametern.</div>
+      </section>
+
+      <section>
+        <div class="eyebrow">Input</div>
+        <h2>Tokens</h2>
+        <div class="token-row token-example" aria-label="Schematische Tokenisierung eines Leipzig-Satzes">
+          <span class="token">Der</span><span class="token"> schönste</span><span class="token"> Stadt</span><span class="token">teil</span><span class="token"> Leipzig</span><span class="token">s</span><span class="token"> ist</span><span class="token"> Connewitz</span><span class="token">.</span>
+        </div>
+        <div class="key-statements token-facts">
+          <div class="key-statement">Tokens sind quasi "Wörter" für LLMs</div>
+          <div class="key-statement">Tokenzahl ≈ Anzahl Wörter x 1,5 oder Zeichenzahl / 4</div>
+        </div>
+      </section>
+
+      <section class="fixed-sequence-slide">
+        <div class="eyebrow">Input</div>
+        <h2>Chatten mit LLMs</h2>
+        <div class="machine chat-machine fixed-diagram">
+          <div class="input-box">
+            <div class="box-label">Kontext</div>
+            <div class="prompt-line user">user: Schreibe eine Aussage über den schönsten Stadtteil Leipzigs.</div>
+            <div class="prompt-line assistant">assistant: <span class="generated-token fragment current-visible" data-fragment-index="0">Connewitz</span><span class="fragment" data-fragment-index="1">Connewitz <span class="generated-token">ist</span></span></div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="llm-orb">LLM</div>
+          <div class="flow-arrow">→</div>
+          <div class="output-box">
+            <div class="box-label">Wahrscheinlichkeit für das nächste Token</div>
+            <div class="prediction-stack">
+              <div class="prediction-state fragment fade-out" data-fragment-index="0">
+                <div class="dist-row"><span class="prediction-highlight">Connewitz</span><div class="bar"><span style="width:68%"></span></div><span>68 %</span></div>
+                <div class="dist-row"><span>Plagwitz</span><div class="bar"><span style="width:12%"></span></div><span>12 %</span></div>
+                <div class="dist-row"><span>Gohlis</span><div class="bar"><span style="width:6%"></span></div><span>6 %</span></div>
+                <div class="dist-row"><span>Reudnitz</span><div class="bar"><span style="width:.3%;min-width:2px;"></span></div><span>0,3 %</span></div>
+                <div class="dist-row"><span>…</span><div></div><span></span></div>
+              </div>
+              <div class="prediction-state fragment fade-in-then-out" data-fragment-index="0">
+                <div class="dist-row"><span class="prediction-highlight">ist</span><div class="bar"><span style="width:54%"></span></div><span>54 %</span></div>
+                <div class="dist-row"><span>gilt</span><div class="bar"><span style="width:16%"></span></div><span>16 %</span></div>
+                <div class="dist-row"><span>liegt</span><div class="bar"><span style="width:8%"></span></div><span>8 %</span></div>
+                <div class="dist-row"><span>hat</span><div class="bar"><span style="width:6%"></span></div><span>6 %</span></div>
+                <div class="dist-row"><span>…</span><div></div><span></span></div>
+              </div>
+              <div class="prediction-state fragment fade-in" data-fragment-index="1">
+                <div class="dist-row"><span class="prediction-highlight">der</span><div class="bar"><span style="width:42%"></span></div><span>42 %</span></div>
+                <div class="dist-row"><span>bekannt</span><div class="bar"><span style="width:19%"></span></div><span>19 %</span></div>
+                <div class="dist-row"><span>ein</span><div class="bar"><span style="width:11%"></span></div><span>11 %</span></div>
+                <div class="dist-row"><span>besonders</span><div class="bar"><span style="width:7%"></span></div><span>7 %</span></div>
+                <div class="dist-row"><span>…</span><div></div><span></span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="eyebrow">Input</div>
+        <h2>Training</h2>
+        <div class="centered-body">
+          <div class="pipeline training-pipeline">
+            <div class="pipe-card"><h3>Pre-Training</h3><p>„Grundwissen“ auf Basis sehr großer Datenmengen lernen.</p></div>
+            <div class="pipe-arrow">→</div>
+            <div class="pipe-card"><h3>Instruction Tuning</h3><p>Fine-Tuning mit Beispielen, um ein Frage-Antwort-Schema zu lernen.</p></div>
+            <div class="pipe-arrow">→</div>
+            <div class="pipe-card"><h3>Alignment</h3><p>Verhalten an Präferenzen anpassen, z. B. durch Reinforcement Learning from Human Feedback (RLHF).</p></div>
+          </div>
+          <div class="key-statements">
+            <div class="key-statement">Training erfolgt ausschließlich vor der Benutzung.</div>
+            <div class="key-statement">Fähigkeiten des Modells hängen von den Trainingsdaten ab.</div>
+            <div class="key-statement">Modellverhalten basiert auf den Präferenzen des Herstellers.</div>
+          </div>
+        </div>
+        <aside class="notes">Nach dem Training erfolgen Anpassungen nur noch über den Kontext. Bei einer Aufgabe für das LLM sollte man sich fragen: Gibt es dafür wahrscheinlich gute Trainingsdaten? Modelle werden außerdem nach Präferenzen der Hersteller ausgerichtet. Dazu kann gehören, Nutzenden häufig zuzustimmen oder Follow-up-Fragen zu stellen, um die Interaktion angenehm und lang zu halten.</aside>
+      </section>
+
+      <section class="fixed-sequence-slide structured-slide thinking-slide">
+        <div class="eyebrow">Input</div>
+        <h2>Thinking</h2>
+        <div class="machine fixed-diagram">
+          <div class="input-box">
+            <div class="box-label">Kontext</div>
+            <div class="prompt-line system">system: Denke nach, bevor du antwortest.</div>
+            <div class="prompt-line user">user: Plane die Migration in drei Schritten.</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="llm-orb">LLM</div>
+          <div class="flow-arrow">→</div>
+          <div class="output-box">
+            <div class="thought">&lt;think&gt;<br>Abhängigkeiten prüfen …<br>Rollback definieren …<br>zuerst Staging …<br>&lt;/think&gt;</div>
+            <div class="prompt-line assistant" style="margin-top:12px;">assistant: 1. Inventur der …</div>
+          </div>
+        </div>
+        <aside class="notes">Nicht behaupten, man sehe dem Modell beim Denken zu. Sichtbare Thinking-Tokens sind ein erlerntes Format; die interne Berechnung bleibt Next-Token-Prädiktion.</aside>
+      </section>
+
+      <section class="agent-slide fixed-sequence-slide structured-slide">
+        <div class="eyebrow">Input</div>
+        <h2>Agents</h2>
+        <div class="insight">Agenten sind LLMs, die mithilfe von Tools handeln, also agieren können.</div>
+        <div class="machine agent-diagram fixed-diagram">
+          <div class="input-box">
+            <div class="box-label">Kontext</div>
+            <div class="agent-system-block">system: Du bist im Projektordner. Deine Rolle ist Coding Agent. Folgende Tools kannst du benutzen:</div>
+            <div class="agent-tools">tools:<br>• read(path)<br>• apply_patch(diff)</div>
+            <div class="prompt-line user agent-user">user: Behebe den Login-Bug.</div>
+            <div class="prompt-line tool-result fragment fade-in" data-fragment-index="0">tool: src/auth.ts gelesen</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="llm-orb">LLM</div>
+          <div class="flow-arrow">→</div>
+          <div class="output-box tool-call">
+            <div class="agent-output-stage">
+              <div class="agent-output-state fragment fade-out" data-fragment-index="0">
+                <div class="box-label">Tool Call</div>
+                <div class="thought" style="color:var(--ink);">{<br>&nbsp;"tool": "read",<br>&nbsp;"path": "src/auth.ts"<br>}</div>
+              </div>
+              <div class="agent-output-state fragment fade-in" data-fragment-index="0">
+                <div class="box-label">Thinking + Tool Call</div>
+                <div class="thought">Login-Prüfung korrigieren …</div>
+                <div class="thought" style="color:var(--ink);margin-top:12px;">{<br>&nbsp;"tool": "apply_patch",<br>&nbsp;"path": "src/auth.ts"<br>}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="agent-loop"><span>Wenn Tool Call: Ausführen und Ergebnis in den Kontext übernehmen</span></div>
+        <aside class="notes">Zentraler Punkt: Das LLM führt nichts aus. Konventioneller Code validiert den strukturierten Output, ruft das Tool auf und erweitert den Kontext.</aside>
+      </section>
+
+      <section class="fixed-sequence-slide structured-slide harness-slide">
+        <div class="eyebrow">Input</div>
+        <div class="frame-outline"></div>
+        <div class="harness-frame">
+          <h2>Agent Harness</h2>
+          <div class="machine agent-diagram fixed-diagram">
+            <div class="input-box">
+              <div class="box-label">Kontext</div>
+              <div class="agent-system-block">system: Du bist im Projektordner. Deine Rolle ist Coding Agent. Folgende Tools kannst du benutzen:</div>
+              <div class="agent-tools">tools:<br>• read(path)<br>• apply_patch(diff)</div>
+              <div class="prompt-line user agent-user">user: Behebe den Login-Bug.</div>
+              <div class="prompt-line tool-result">tool: src/auth.ts gelesen</div>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="llm-orb">LLM</div>
+            <div class="flow-arrow">→</div>
+            <div class="output-box tool-call">
+              <div class="box-label">Thinking + Tool Call</div>
+              <div class="thought">Login-Prüfung korrigieren …</div>
+              <div class="thought" style="color:var(--ink);margin-top:12px;">{<br>&nbsp;"tool": "apply_patch",<br>&nbsp;"path": "src/auth.ts"<br>}</div>
+            </div>
+          </div>
+          <div class="agent-loop"><span>Wenn Tool Call: ausführen und Ergebnis in den Kontext übernehmen</span></div>
+        </div>
+        <div class="insight harness-insight">Der Harness verwaltet Kontext, Werkzeuge, Berechtigungen und Ausführung.</div>
+      </section>
+
+      <section class="fixed-sequence-slide structured-slide">
+        <div class="eyebrow">Input</div>
+        <h2>Context Engineering</h2>
+        <div class="machine context-engineering-machine fixed-diagram">
+          <div class="context-outer">
+            <div class="box-label">Kontext</div>
+            <div class="system-prompt-box">
+              <div class="box-label">System Prompt</div>
+              <div class="agent-system-block">Allgemeiner Kontext: Du bist im Projektordner. Deine Rolle ist Coding Agent.</div>
+              <div class="module-grid">
+                <div class="prompt-module agents-md-block wide">AGENTS.md:<br>Projektstruktur, Konventionen, Präferenzen<span class="fragment current-visible context-trigger" data-fragment-index="0"></span></div>
+                <div class="prompt-module skills-block wide">Skills:<br>• TYPO3-Konventionen<br>• Test-Workflow<span class="fragment current-visible context-trigger" data-fragment-index="1"></span></div>
+                <div class="agent-tools">Tools:<br>• read(path)<br>• apply_patch(diff)</div>
+                <div class="prompt-module mcp-block">MCP-Tools:<br>• Issue-Tracker<br>• Browser<span class="fragment current-visible context-trigger" data-fragment-index="2"></span></div>
+              </div>
+            </div>
+            <div class="user-prompt-box"><span class="muted">User Prompt:</span><br>Behebe den Login-Bug.</div>
+          </div>
+          <div class="flow-arrow fragment fade-out" data-fragment-index="0">→</div>
+          <div class="llm-orb fragment fade-out" data-fragment-index="0">LLM</div>
+          <div class="flow-arrow fragment fade-out" data-fragment-index="0">→</div>
+          <div class="llm-output-box fragment fade-out" data-fragment-index="0">Agent Output</div>
+          <div class="fragment current-visible context-detail" data-fragment-index="0">
+            <ul>
+              <li>Projektregeln und -kontext für den Agenten</li>
+              <li>Global oder projektspezifisch</li>
+              <li>Entspricht der <span class="mono">CLAUDE.md</span> bei Claude Code</li>
+            </ul>
+            <div class="insight">Veränderter Kontext je nach Projekt</div>
+          </div>
+          <div class="fragment current-visible context-detail" data-fragment-index="1">
+            <ul>
+              <li>Im Grunde Markdown-Dateien mit Anleitungen</li>
+              <li>Werden bei Bedarf in den Kontext geladen</li>
+              <li>Können Dateien, Skripte und Vorlagen mitbringen</li>
+            </ul>
+            <div class="insight">Erweitern Kontext nicht nach Projekt, sondern nach Aufgabe</div>
+          </div>
+          <div class="fragment current-visible context-detail" data-fragment-index="2">
+            <ul>
+              <li>Standardisierte Schnittstelle zu externen Systemen</li>
+              <li>Stellt Tools und zusätzliche Daten bereit</li>
+              <li>Zum Beispiel Jira, Confluence oder Browser</li>
+            </ul>
+            <div class="insight">Gibt Agent zusätzliche Tools zu externen Programmen</div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="eyebrow">Input</div>
+        <h2>Context Window</h2>
+        <div class="ctx-layout">
+          <div class="ctx-window">
+            <div class="ctx-cap">Kontextfenster · feste Größe</div>
+            <div class="ctx-frame">
+              <div class="ctx-seg sys" style="flex:1.1">System Prompt</div>
+              <div class="ctx-seg md" style="flex:1">AGENTS.md</div>
+              <div class="ctx-seg skills" style="flex:1">Skills</div>
+              <div class="ctx-seg tools" style="flex:1">Tools</div>
+              <div class="ctx-seg chat" style="flex:2.6">Verlauf ↓</div>
+              <div class="ctx-seg free" style="flex:1.1">frei</div>
+            </div>
+          </div>
+          <div class="key-statements context-facts">
+            <div class="key-statement"><span>LLMs haben begrenzte Kontextfenster-Größe (Top-Modelle aktuell: 1 Million Tokens)</span></div>
+            <div class="key-statement"><span>Wegen Lost-In-The-Middle: Kontext ≤ 150k Tokens halten
+              <span class="sub">→ <span class="mono">AGENTS.md</span> klein halten</span>
+              <span class="sub">→ Detailanweisungen in Skills auslagern</span>
+              <span class="sub">→ Wenn Context-Window voll: /handoff und neuer Chat oder /compact</span>
+            </span></div>
+          </div>
+        </div>
+      </section>
+
+
+      <section class="center-slide hero transition-title">
+        <div class="circle circle-pink" style="width:620px;height:620px;bottom:-310px;right:-160px;"></div>
+        <div class="circle circle-lav" style="width:440px;height:440px;top:-230px;left:-120px;"></div>
+        <div class="deck-grid"></div>
+        <div class="center-content">
+          <h2>DEMO</h2>
+        </div>
+        <aside class="notes">zuerst llama.cpp token lens zeigen, dann opencode-ollama kommunikation</aside>
+      </section>
+
+      <section>
+        <div class="eyebrow">Input</div>
+        <h2>Missverständnis Intelligenz</h2>
+        <div class="centered-body" style="align-content:center;">
+          <div class="intelligence-mark" style="transform: scale(2);">
+            <img src="assets/machine-learning-model.svg" alt="LLM"><span>?</span>
+          </div>
+        </div>
+        <aside class="notes">Analogie Psychologie. Große „technische“ Unterschiede zwischen unserer und künstlicher Intelligenz, z. B. kann ein Agent vergangenes Thinking je nach Implementierung nicht sehen. Das führt zu falschen Annahmen, wenn man sich der Unterschiede nicht bewusst ist. Es ist unklar, ob nett sein hilft. Viele Regeln für gute Softwareteams gelten aber auch bei LLMs.</aside>
+      </section>
+
+      <section>
+        <div class="eyebrow">Input</div>
+        <h2>In die Praxis! lokal und Open-Source</h2>
+        <p class="need-label">Wir brauchen:</p>
+        <ul class="need-list">
+          <li>Lokal laufendes Sprach-Modell 💬</li>
+          <li>Harness-Anwendung 🤖</li>
+        </ul>
+        <aside class="notes">Jetzt Konkret wir wollen das Machen und zwar OpenSource und Lokal</aside>
+      </section>
+
+      <section>
+        <div class="eyebrow">Input</div>
+        <h2>Lokale Modelle</h2>
+        <div class="stack-grid">
+          <div class="panel desktop">
+            <h3>1. Modell muss in den Grafikspeicher (VRAM) passen, RAM wäre zu langsam</h3>
+            <p class="req-note">→ Ausnahme Apple Silicon: Shared Memory → VRAM ≈ RAM</p>
+            <div class="formula">VRAM-Verbrauch ≈ Anzahl Modellparameter × Bits pro Parameter ÷ 8 + Context-Window-Size<span class="formula-note">abhängig von Quantisierung meist 8 oder 4</span></div>
+          </div>
+          <div class="panel terminal">
+            <h3>2. Muss schnell genug laufen: gemessen in Tokens/Sekunde</h3>
+            <p class="req-note">Zusätzliche Faktoren:</p>
+            <ul class="two-col">
+              <li>Dense / Mixture of Experts (MoE)</li>
+              <li>Auf Mac: MLX-Unterstützung</li>
+              <li>Quantisierung</li>
+              <li>Multi Token Prediction (MTP)</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="screenshot-slide">
+        <div class="eyebrow">Input</div>
+        <h2>LLM-Runtimes</h2>
+        <div class="runtime-grid">
+          <a class="runtime-card" href="https://ollama.com/" target="_blank" rel="noopener">
+            <img class="runtime-logo" src="assets/ollama.svg" alt="Ollama-Logo">
+            <div><h3>Ollama</h3>
+              <ul class="pm">
+                <li>Etablierter Standard</li>
+                <li>Einfache Anbindung</li>
+                <li>Terminal und API als Hauptanwendung</li>
+                <li class="con">Keine Unterstützung bei der Modellwahl</li>
+              </ul>
+            </div>
+          </a>
+          <a class="runtime-card" href="https://lmstudio.ai/" target="_blank" rel="noopener">
+            <img class="runtime-logo" src="assets/lm-studio.webp" alt="LM-Studio-Logo">
+            <div><h3>LM Studio</h3>
+              <ul class="pm">
+                <li>Chatinterface mit vielen Funktionen</li>
+                <li class="con">Umständliche Anbindung</li>
+                <li>Fokus auf benutzerfreundliche GUI</li>
+                <li>Gute Modellvorauswahl</li>
+              </ul>
+            </div>
+          </a>
+        </div>
+        <div class="screenshot-overlay fragment fade-in-then-out" data-fragment-index="0">
+          <div class="term">
+            <div class="term-bar"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i></div>
+            <div class="term-body">
+              <b>~</b> ollama run gemma4:e2b<br>
+              <em>pulling manifest</em><br>
+              <em>success</em><br><br>
+              <i>&gt;&gt;&gt;</i> Was ist ein Coding Agent?<br>
+              Ein Coding Agent ist ein Sprachmodell, das über Tools<br>
+              Dateien liest, Änderungen schreibt und Befehle ausführt.<br><br>
+              <i>&gt;&gt;&gt;</i> <span style="opacity:.6">▍</span>
+            </div>
+          </div>
+        </div>
+        <div class="screenshot-overlay fragment fade-in" data-fragment-index="1">
+          <img src="assets/lm-studio-app.webp" alt="LM-Studio-Anwendung">
+        </div>
+      </section>
+
+      <section class="screenshot-slide">
+        <div class="eyebrow">Input</div>
+        <h2>Modell und Hardwarewahl Empfehlungen</h2>
+        <div class="link-list">
+          <div class="link-group">
+            <h3>Lokal:</h3>
+            <ul>
+              <li>LM Studio Empfehlungen</li>
+              <li><a class="lnk" href="https://willitrunai.com/blog/best-ai-models-for-mac-16gb" target="_blank" rel="noopener">willitrun.ai</a> <span class="note">LLM-Empfehlungen basierend auf Hardware</span></li>
+              <li><a class="lnk" href="https://local.ai/greglit/invite" target="_blank" rel="noopener">local.ai</a> <span class="note">Gute Analysen zu Hardware und Benchmarks</span></li>
+              <li><a class="lnk" href="https://llmconfigurator.com/en/guides/best-gpu-buyer-guide" target="_blank" rel="noopener">llmconfigurator.com</a> <span class="note">GPU-Kaufberatung und generell gute Infos</span></li>
+            </ul>
+          </div>
+          <div class="link-group">
+            <h3>Generell:</h3>
+            <ul>
+              <li><a class="lnk" href="https://livebench.ai/" target="_blank" rel="noopener">livebench.ai</a> <span class="note">Nur für große Modelle</span></li>
+              <li><a class="lnk" href="https://artificialanalysis.ai/leaderboards/models" target="_blank" rel="noopener">artificialanalysis.ai</a> <span class="note">Viele Modelle und Compare-Funktion</span></li>
+            </ul>
+          </div>
+        </div>
+        <div class="screenshot-overlay model-picker fragment fade-in-then-out" data-fragment-index="0">
+          <img src="assets/lmstudio-modelpicker.png" alt="Modellvorschläge in LM Studio">
+        </div>
+        <div class="screenshot-overlay fragment fade-in" data-fragment-index="1">
+          <img src="assets/Artificial Analysis Intelligence Index (18 Aug '26) - Open Source, Tiny, Small Models.png" alt="Modellvergleich bei Artificial Analysis">
+        </div>
+      </section>
+
+      <section>
+        <div class="eyebrow">Input</div>
+        <h2>Open Source Harnesse</h2>
+        <div class="harness-feature">
+          <a href="https://opencode.ai/" target="_blank" rel="noopener"><img src="assets/opencode-app.png" alt="OpenCode"></a>
+          <div>
+            <h3><a href="https://opencode.ai/" target="_blank" rel="noopener">OpenCode</a></h3>
+            <ul class="pm">
+              <li>Sehr etabliert</li>
+              <li>Robust und kein Slop</li>
+              <li>Funktioniert mit vielen Modellen</li>
+              <li class="con">Viele Funktionen von Claude Code fehlen</li>
+              <li class="con">Plugin-Ökosystem ist nicht so groß</li>
+              <li class="con">Keine Agent-Sandboxes → OpenCode TUI in Container starten</li>
+            </ul>
+          </div>
+        </div>
+        <div class="harness-feature">
+          <a href="https://github.com/openchamber/openchamber" target="_blank" rel="noopener"><img src="assets/openchamber-app.png" alt="OpenChamber"></a>
+          <div>
+            <h3><a href="https://github.com/openchamber/openchamber" target="_blank" rel="noopener">OpenChamber</a></h3>
+            <p>Nutzt OpenCode als Backend</p>
+            <p>Viele zusätzliche Features und besseres UI</p>
+          </div>
+        </div>
+        <div class="harness-feature">
+          <a href="https://github.com/different-ai/openwork" target="_blank" rel="noopener"><img src="assets/openworkicon.png" alt="OpenWork"></a>
+          <div>
+            <h3><a href="https://github.com/different-ai/openwork" target="_blank" rel="noopener">OpenWork</a></h3>
+            <p>Claude Cowork Alternative</p>
+          </div>
+        </div>
+        <aside class="notes">kurz OpenChamber zeigen</aside>
+      </section>
+
+      <section>
+        <div class="eyebrow">Input</div>
+        <h2>Open Source Harnesse</h2>
+        <div class="harness-list">
+          <a class="harness-row" href="https://github.com/nousresearch/hermes-agent" target="_blank" rel="noopener">
+            <img src="assets/hermes.png" alt="Hermes">
+            <span class="name">Hermes</span>
+            <span class="repo">github.com/nousresearch/hermes-agent</span>
+          </a>
+          <div class="harness-row">
+            <img src="assets/piagenticon.png" alt="Pi">
+            <span class="name">Pi (Oh My Pi)</span>
+            <span class="repo"><a href="https://github.com/earendil-works/pi" target="_blank" rel="noopener">github.com/earendil-works/pi</a><br><a href="https://github.com/can1357/oh-my-pi" target="_blank" rel="noopener">github.com/can1357/oh-my-pi</a></span>
+          </div>
+          <a class="harness-row" href="https://github.com/deepseek-ai/deepseek-harness" target="_blank" rel="noopener">
+            <img src="assets/deepseek.png" alt="Deepseek">
+            <span class="name">Deepseek Harness</span>
+            <span class="repo">github.com/deepseek-ai/deepseek-harness</span>
+          </a>
+          <p class="meta-label">Meta Harnesse</p>
+          <a class="harness-row" href="https://www.crewai.com/" target="_blank" rel="noopener">
+            <img src="assets/crewai.png" alt="CrewAI">
+            <span class="name">CrewAI</span>
+            <span class="repo">crewai.com</span>
+          </a>
+          <a class="harness-row" href="https://omnigent.ai/" target="_blank" rel="noopener">
+            <img src="assets/omnigent.svg" alt="Omnigent">
+            <span class="name">Omnigent</span>
+            <span class="repo">omnigent.ai</span>
+          </a>
+        </div>
+      </section>
+
+      <section class="center-slide hero transition-title">
+        <div class="circle circle-pink" style="width:620px;height:620px;bottom:-310px;right:-160px;"></div>
+        <div class="circle circle-lav" style="width:440px;height:440px;top:-230px;left:-120px;"></div>
+        <div class="deck-grid"></div>
+        <div class="center-content"><h2>Fragen?</h2></div>
+      </section>
+
+      <section class="transition-title">
+        <div class="circle circle-pink" style="width:560px;height:560px;bottom:-260px;right:-160px;"></div>
+        <div class="circle circle-lav" style="width:430px;height:430px;top:-220px;left:-120px;"></div>
+        <div class="deck-grid"></div>
+        <h1>HANDS-ON!</h1>
+      </section>
+
+      <section>
+        <div class="eyebrow">Hands-on</div>
+        <h2>Ab ins Repo! 🚀</h2>
+        <div class="split" style="grid-template-columns: 1.5fr .8fr; align-items:center;">
+          <div>
+            <ul style="font-size:.68em;line-height:1.5;">
+              <li>OpenCode, OpenChamber oder OpenWork ausprobieren</li>
+              <li>Lokales Modell mit Ollama einrichten</li>
+              <li>Atlassian MCP anbinden</li>
+              <li>Skills finden und eigene Skills erstellen</li>
+              <li>Live-Demos lokal ausprobieren</li>
+            </ul>
+          </div>
+          <div style="text-align:center;">
+            <a href="https://urlr.me/AFqu4Q" target="_blank" rel="noopener" style="position:relative;display:inline-block;width:260px;height:260px;">
+              <img src="assets/Qrcoderepo.png" alt="QR-Code zum Workshop-Repository" style="width:100%;height:100%;object-fit:contain;">
+              <img src="assets/github.png" alt="GitHub" style="position:absolute;width:66px;height:66px;left:50%;top:50%;transform:translate(-50%,-50%);">
+            </a>
+            <p><a class="lnk mono" href="https://urlr.me/AFqu4Q" target="_blank" rel="noopener">urlr.me/AFqu4Q</a></p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="eyebrow">Hands-on</div>
+        <h2>OpenCode Cheatsheet</h2>
+        <div class="cheat-grid">
+          <div class="cheat-item"><span>/connect</span><span class="description">Provider verbinden</span></div>
+          <div class="cheat-item"><span>/models</span><span class="description">Modell auswählen</span></div>
+          <div class="cheat-item"><span>/init</span><span class="description">AGENTS.md erstellen</span></div>
+          <div class="cheat-item"><span>Tab</span><span class="description">Zwischen Plan- und Build-Modus wechseln</span></div>
+          <div class="cheat-item"><span>/undo /redo</span><span class="description">Änderungen zurück oder vor</span></div>
+          <div class="cheat-item"><span>@</span><span class="description">Dateien referenzieren</span></div>
+          <div class="cheat-item"><span>/sessions</span><span class="description">Sessions verwalten</span></div>
+        </div>
+        <p class="cheat-link">
+          <span class="caption">Ausführlicher Guide:</span><br>
+          → <a class="lnk" href="https://ai.sulat.com/the-definitive-guide-to-opencode-from-first-install-to-production-workflows-aae1e95855fb" target="_blank" rel="noopener">ai.sulat.com/the-definitive-guide-to-opencode-from-first-install-to-production-workflows-aae1e95855fb</a>
+        </p>
+      </section>
+
+      <section>
+        <div class="eyebrow">Hands-on</div>
+        <h2>KI Sicherheit</h2>
+        <div class="centered-body">
+          <ul style="list-style:none;padding:0;font-size:.68em;">
+            <li style="margin-bottom:24px;">⚠️ Wenn möglich Sandboxing verwenden</li>
+            <li style="margin-bottom:24px;">⚠️ Agent immer im Projektordner und nicht im Benutzerordner starten</li>
+            <li style="margin-bottom:24px;">⚠️ Sich bewusst machen, an wen man gerade welche Daten schickt</li>
+            <li style="margin-bottom:24px;">⚠️ Nur nötige Berechtigungen geben: Plan-Modus verwenden und OpenCode-Berechtigungen anpassen</li>
+            <li>⚠️ Ergebnis händisch validieren und vor dem Coding Tests schreiben (lassen)</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="transition-title">
+        <div class="circle circle-pink" style="width:700px;height:700px;bottom:-330px;right:-170px;"></div>
+        <div class="circle circle-lav" style="width:520px;height:520px;top:-250px;left:-130px;"></div>
+        <div class="circle circle-peach" style="width:360px;height:360px;bottom:-100px;left:180px;"></div>
+        <div class="deck-grid"></div>
+        <h1>Diskussion</h1>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/plugin/notes/notes.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      history: true,
+      controls: true,
+      progress: true,
+      slideNumber: "c/t",
+      transition: "fade",
+      transitionSpeed: "fast",
+      backgroundTransition: "fade",
+      center: false,
+      width: 1100,
+      height: 700,
+      margin: 0.02,
+      plugins: [RevealNotes]
+    });
+  </script>
+</body>
+</html>

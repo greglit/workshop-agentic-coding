@@ -9,8 +9,8 @@ Gregor Wolf
 ## Repo-Übersicht
 
 Dieses Repo enthält alle Materialien des Workshops:
-- **slides/** &mdash; Präsentation im HTML-Format inklusive Assets
-- **live-demo/** &mdash; Python-Skripte zur schrittweisen Token-Generierung mit llama.cpp und zur Anzeige des Datenverkehrs zwischen OpenCode und Ollama
+- **slides/** &mdash; Präsentation als PDF und HTML-File
+- **live-demo/** &mdash; Zwei kleine Python-Skripte die Token-By-Token zeigen wie ein LLM zum Agenten wird
 - **opencode.json.example** &mdash; Beispielkonfiguration für OpenCode mit Ollama und Atlassian MCP
 
 ---

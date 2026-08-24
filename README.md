@@ -212,13 +212,16 @@ Danach beispielweise Prompten:
 #### Eigenen Skill erstellen
 1. Installiere einen "Skill-Creator"-Skill der dir dabei hilft neue Skills zu erstellen.
 
-Prompt:
+Prompt: 
 ```
 /find-skills Ich möchte einen Skill installieren, der mir dabei hilft neue Skills zu erstellen.
 ```
 oder in OpenChambers Skills Catalog nach `skill-creator` suchen.
 
-2. Prompten mit Skill "skill-creator":
+2. Prompten mit neuem Skill "skill-creator":
+```
+/skill-creator Erstelle einen Skill indem wir definieren, was du tuhen sollst, wenn ich dich nach einer ausführlichen Recherche zu einem Thema frage.
+```
 ```
 /skill-creator Erstelle mir aus dem Arbeitsablauf dieser Session einen neuen Skill.
 ```
